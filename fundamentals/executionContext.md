@@ -6,6 +6,7 @@
 
 1. [What is Execution Context](#01)
 2. [What is Hoisting](#02)
+3. [How Does a Functionn Work in JavaScript](#03)
 
 ---
 
@@ -49,3 +50,9 @@ function sayCongrats() {}
 let myFunc = function sayCongrats() {}
 let myArrow = () => ()
 ```
+
+##### 03
+
+##### How Does a Function Work in JavaScript
+
+- Just remember one thing whatever variables we have inside function blocks are altogether different copies witih every execution context be it functional or global we get this object
