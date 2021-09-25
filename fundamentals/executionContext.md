@@ -10,6 +10,7 @@
 4. [Difference between undefined and not Defined](#04)
 5. [SCOPE CHAIN IN JS](#05)
 6. [Understanding let and const](#06)
+7. [Understanding CLOSURES](#07)
 
 ---
 
@@ -91,7 +92,7 @@ function test() {
 test();
 ```
 
-##### 05
+##### 06
 
 ##### Understanding let and const
 
@@ -135,3 +136,142 @@ test();
 
     - you will not able to access a outside the braces
     - block scopes also follows lexical scope ie if there is block inside block it first checks in own block than it goes up checks till global scope
+
+##### 07
+
+##### Understanding CLOSURES
+
+- A function bundled together with its lexical enviornment in simple terms
+  if there is a function (inner) which is inside another function(outer) and the inner accesses some variables of outer than there is a
+  closure()outer that is formed simple
+
+```js
+// this is a closure
+function outer() {
+  var a = 10;
+  inner();
+  function inner() {
+    console.log(a);
+  }
+}
+
+outer();
+
+// but not this
+
+var a = 10;
+function outer() {
+  inner();
+  function inner() {
+    console.log(a);
+  }
+}
+
+outer();
+
+//because inner uses nothing of outer
+```
+
+Classics of Closure
+
+```js
+// var a = 10;
+function outer() {
+  var x = 10;
+  function inner(a) {
+    console.log(x);
+  }
+  return inner;
+}
+
+let closurefunc = outer();
+
+check below understanding and then continew
+
+closurefunc(20);
+```
+
+###### uderstanding
+
+- At this point since you have executed outer its altogether not there in callstack its popped off so the question is it has returned innner (a closure was returned not only inner) now how inner will behave in other execution context (i-e whether the returned function is executed in global space or inner is executed inside any other space it will remember that x is 10 (x is not garbage collected by js Enjine and also remember closure remembers the reference and npt actual value like it will remember what x is pointing to here it is 10) ) will it remember x = 10 always yes brother it will because closures are beautiful it remembers the scoped variables
+
+###### Interview Questions on closures
+
+- basic closure with setTimeout
+
+```js
+function outer() {
+  var i = 10;
+  setTimeout(() => {
+    console.log(i);
+  }, 1000);
+}
+outer();
+```
+
+- remember setTimeout does not execute exactly after var i = 10 it is a webApi method and executes seperately javaScript does not wait for it to execute it moves forward to next line. once setTimeout is ready with its
+  o/p and call stack is empty it is then executed
+
+##### Question >> Print 0 to 5 each after 1 second
+
+wrong solution
+
+```js
+function outer() {
+  for (var i = 0; i < 5; i++) {
+    setTimeout(() => {
+      console.log(i);
+    }, i * 1000);
+  }
+}
+outer();
+```
+
+> console.log(i) inside seTimeout remembers and referes to the same global REFERENCE this proves it remembers reference and not value of i (var i is a global variable ) so each 5 setTomeout functions points to same i
+
+- solution 01
+  - - change var to let so when let changes each setTimeout function will get new fresh incremented copy of i
+
+```js
+function outer() {
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      console.log(i);
+    }, i * 1000);
+  }
+}
+outer();
+```
+
+- solution 02 - if you are not allowed to change var to let we use IIFE
+
+  ```js
+  function outer() {
+    for (var i = 0; i < 5; i++) {
+      (function execute() {
+        var temp = i;
+        setTimeout(() => {
+          console.log(temp);
+        }, i * 1000);
+      })();
+    }
+  }
+  outer();
+  ```
+
+- solution 03 - if lets say even IIFE is not allowed
+  - This solutio we understand that the solution lies in setTimeout should not refer to var i of for loop
+
+```js
+function outer() {
+  for (var i = 0; i < 5; i++) {
+    function closure(x) {
+      setTimeout(() => {
+        console.log(x);
+      }, x * 1000);
+    }
+    closure(i);
+  }
+}
+outer();
+```
