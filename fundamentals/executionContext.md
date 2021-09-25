@@ -7,6 +7,9 @@
 1. [What is Execution Context](#01)
 2. [What is Hoisting](#02)
 3. [How Does a Functionn Work in JavaScript](#03)
+4. [Difference between undefined and not Defined](#04)
+5. [SCOPE CHAIN IN JS](#05)
+6. [Understanding let and const](#06)
 
 ---
 
@@ -55,4 +58,80 @@ let myArrow = () => ()
 
 ##### How Does a Function Work in JavaScript
 
-- Just remember one thing whatever variables we have inside function blocks are altogether different copies witih every execution context be it functional or global we get this object
+- Just remember one thing whatever variables we have inside function blocks are altogether different copies.
+
+##### 04
+
+##### Difference between undefined and not Defined
+
+- JavaScript allocates memory to the program variables even before executing the program (and memory value it assigns value as undefined for variables) if a certain variable is altogether not there in the program (JavaScript will not allocate memory to it) than it is undefined
+
+- Remember JavaScript is loosely typed we need not tell Js okay this variable will only hold Int / float / Boolean , what wever we assign javaScript changes dataType to that
+
+##### 05
+
+##### SCOPE CHAIN IN JS
+
+- Definition of scope is simple where can you access a variable . Scope concept is directly related to lexical enviornment => Lexical enviornment is local memory + lexical enviornment of its parent ,
+  lexical enviornment is created when an execution context is created (function is invoked)
+  just a simple trick in callstack first thing to go in is global execution stack then one by one as new new function executes its execution context are created and pushed on top of call stack and if a variable is not presednt in a certain execution context it can go below to find till global but it cannot go up to check like for example if some variable is declared in function and it is console.log in global space we cannot go up and check => this is nothing but scope chain
+
+  play around with below check call stack and click on it to check the scope values
+
+```js
+//compiler sees first word as function
+function test() {
+  var a11 = 20;
+  inner();
+  function inner() {
+    console.log(a11);
+  }
+}
+
+test();
+```
+
+##### 05
+
+##### Understanding let and const
+
+- first are let and cosnst hoisted ?
+
+  - Answer is they are hoisted but ther are in temporal dead zone
+    temporal dead zone === time difference between when the let variable was hoisted till it is initialized a value if you access let in this time frame you will get error
+    Reference Error , cannot access variable before initialization
+
+  ```js
+  console.log(a);
+  let a;
+  //if you check in browser you will get a: undefined but these are inside script and not global object
+  // let variables are not attached to window object they are in different memory space (script)
+  ```
+
+  - you cannot even redeclare let variables
+
+- underatanding const
+  Behaves same in hoisting but little more strict than let you have to initialize on declaration and thats the final value it will hold for its entire life span
+
+  ###### Understanding block Scope
+
+  - let and const are blocked scope
+  - block is noththng but a pair of curly braces in JavsScript ==> {}
+    consider
+
+    ```js
+    {
+      const a = 10;
+      var b = 1000;
+    }
+    const c = 30;
+    ```
+
+    if you check in browser Scope
+
+    > a is inside block scope
+    > b is on global object
+    > c is inisde script tag
+
+    - you will not able to access a outside the braces
+    - block scopes also follows lexical scope ie if there is block inside block it first checks in own block than it goes up checks till global scope

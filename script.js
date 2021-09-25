@@ -1,3 +1,6 @@
-console.log('Hardik');
-console.log(testConst);
-var testConst = 123;
+const c = 30;
+{
+  const a = 10;
+  var b = 1000;
+  console.log(c);
+}
