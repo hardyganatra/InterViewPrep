@@ -11,6 +11,7 @@
 5. [SCOPE CHAIN IN JS](#05)
 6. [Understanding let and const](#06)
 7. [Understanding CLOSURES](#07)
+8. [Different Varieties of Functions in JavaScript](#08)
 
 ---
 
@@ -274,4 +275,63 @@ function outer() {
   }
 }
 outer();
+```
+
+##### 08
+
+##### Different Varieties of Functions in JavaScript
+
+- ##### What is function Statement
+  - function Statement is same as function Declaration both are interchangable terms
+  ```js
+  function a() {}
+  ```
+- ##### What is function Expression
+  ```js
+  var b = function a() {};
+  ```
+  - ##### Difference between function Statement && function Expression
+
+###### Hoisting (function Statement entire function block is hoisted whereas in function Expression only the variable is hoisted)
+
+- ##### What is Anonymous function
+
+```js
+var b = function a() {};
+```
+
+- ##### What is named function Expression
+
+```js
+var b = function a() {};
+// remember you cannot call a() , but below is possible
+var b = function a() {
+  a();
+};
+// reason being a is not declared in outer/ global scope it is basically a varable only acccessed by functions
+```
+
+- ##### DIfference between params and arguments
+
+```js
+var b = function a(param1, param2) {};
+b(arg1, arg2);
+```
+
+- ##### What are first class functons
+  - Ability to use functions as values is known as first class functions also known as first class citizens
+    In JS we can pass functions inside another in arguments and also we can return a function from a function
+    Basically can be treated as values in JS
+
+```js
+var b = function a(param1, param2) {
+  return param2;
+};
+b(arg1, function () {});
+```
+
+- ##### Arrow Functions
+
+```js
+var b = () => {};
 ```
