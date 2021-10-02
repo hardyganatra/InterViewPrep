@@ -12,6 +12,7 @@
 6. [Understanding let and const](#06)
 7. [Understanding CLOSURES](#07)
 8. [Different Varieties of Functions in JavaScript](#08)
+9. [Understanding CALLBACKS](#09)
 
 ---
 
@@ -335,3 +336,42 @@ b(arg1, function () {});
 ```js
 var b = () => {};
 ```
+
+##### 09
+
+##### Understanding CALLBACKS
+
+- Callbacks are nothing but functions which are passed inside another functions and executed at a later point in time
+  for example setTimeout has a callback executed after certain specified milliseconds
+
+##### Question > create a button and on the click of that print the time it was clicked
+
+- Solution 01
+
+      ```js
+      let i = 0;
+
+  document.getElementById('btn').addEventListener('click', function clickFunc() {
+  console.log('Btn Clicked', ++i);
+  });
+
+  ```
+
+  ```
+
+- Cannot use let i = 0 because if somewhere else in program if i change i logic fails so we need to use closure
+
+```js
+function attachEventListeners() {
+  let i = 0;
+  document.getElementById('btn').addEventListener('click', function clickFunc() {
+    console.log('btn click', ++i);
+  });
+}
+
+attachEventListeners();
+```
+
+##### It is said we need to remove / clear event listeners Why
+
+- Event listeners are heavy they are not garbage collected once closures are formed it can take aloot of space
