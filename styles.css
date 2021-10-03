@@ -44,7 +44,7 @@ a {
 }
 
 .long-quote {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .fa-quote-left {
@@ -65,6 +65,36 @@ a {
 .twitter-button:hover {
   background-color: #0f2e5c;
   font-size: 1.5rem;
+}
+
+/* Loader */
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid rgb(11, 11, 43);
+  border-bottom: 16px solid rgb(41, 44, 46);
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Styling for general elements  */
@@ -97,6 +127,6 @@ button:active {
     margin: auto 10px;
   }
   .quote-text {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 }
