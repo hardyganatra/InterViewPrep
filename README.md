@@ -7,4 +7,8 @@
 ## JavaScript Modern Interview Code Challenges by topic
 
 - BASICS
+
   - [Concepts](./fundamentals/executionContext.md)
+
+- PROJECTS
+  - [UI-PREP](./ProjectsLearning/ref.md)
