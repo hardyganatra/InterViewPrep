@@ -13,6 +13,7 @@
 7. [Understanding CLOSURES](#07)
 8. [Different Varieties of Functions in JavaScript](#08)
 9. [Understanding CALLBACKS](#09)
+10. [Understanding EventLoop](#10)
 
 ---
 
@@ -229,7 +230,7 @@ function outer() {
 outer();
 ```
 
-> console.log(i) inside seTimeout remembers and referes to the same global REFERENCE this proves it remembers reference and not value of i (var i is a global variable ) so each 5 setTomeout functions points to same i
+> console.log(i) inside seTimeout remembers and referes to the same global REFERENCE this proves it remembers reference and not value of i (var i is a global variable ) so each 5 setTimeout functions points to same i
 
 - solution 01
   - - change var to let so when let changes each setTimeout function will get new fresh incremented copy of i
@@ -375,3 +376,37 @@ attachEventListeners();
 ##### It is said we need to remove / clear event listeners Why
 
 - Event listeners are heavy they are not garbage collected once closures are formed it can take aloot of space
+
+##### 10
+
+##### Understanding EventLoop
+
+- First if all as we understand we have call stack managed by JavaScript Engine and for all the other fancy stuff like
+
+  > Access to DOM
+  > Fetch API
+  > Timer
+  > Location
+  > Bluetooth
+  > Console.log
+  > ...etc
+  > This is provided to use by BROWSERS Web API which we can access through the window object
+
+- Lets say there is a timer we set using setTimeout what happens is when js sees the setTimeout it gives this to webApi and moves on to next line javascript does not wait for timer to execute , if there is no code left the Global xec context is popped of
+- Than when time specefied in setTimeout is over somehow the callback mentioned in setTimeout should be popped inside callstack for it to be
+  executed by JS , bacoz JS engine can only execute code present in call stack.
+
+###### --- HERE COMES CALLBACK QUEUE AND EVENT LOOP
+
+- The callback does not come directly it comes in via callback queue , callback queue works in FIFO manner and now the Job of EVENT LOOP is check the callback queue and push the functions inside callback queue back to Call stack so that JS can run those
+
+###### --- MICROTASK QUEUE
+
+- When there are promises (fetch) and all the calbacks are not pushed into callback queue but they are pushed to MICROTASK QUEUE
+- Mutation Observer (change in DOM Tree) callbacks goes inside micro task queue
+- MICROTASK QUEUE Greater priority than CALLBACK QUEUE
+
+###### --- What is Starvation inside call back queue
+
+- When there are large number of fetch callbacks or mutation observer tasks the one sitting inside callback queue does not get a chance
+  to execute basically it starvs
