@@ -14,6 +14,16 @@
 8. [Different Varieties of Functions in JavaScript](#08)
 9. [Understanding CALLBACKS](#09)
 10. [Understanding EventLoop](#10)
+11. [Higher order functions](#11)
+12. [Map Filter Reduce](#12)
+13. [What is pure functions](#13)
+14. [What is Idempotent function and imperative Vs Declarative](#14)
+15. [What is Immutability](#15)
+16. [call apply bind](#16)
+17. [Function currying](#17)
+
+// call apply bind
+// currying , partial application , memoization
 
 ---
 
@@ -410,3 +420,237 @@ attachEventListeners();
 
 - When there are large number of fetch callbacks or mutation observer tasks the one sitting inside callback queue does not get a chance
   to execute basically it starvs
+
+##### 11
+
+###### --- Higher order functions
+
+- A function which takes another function as an argumentb or returns another function is known as higer order function
+  cosnider below example
+
+```js
+const AreaArray2 = [];
+const radius = [1, 10, 100];
+function genericIterate(logic) {
+const newArray = new Array();
+for (let i = 0; i < radius.length; i++) {
+newArray.push(logic(radius[i]));
+}
+return newArray;
+}
+function logic(r) {
+return Math.PI _ r _ r;
+}
+function logicInto2(r) {
+return 2 _ Math.PI _ r * r;
+}
+Array.prototype.iterate = genericIterate;
+console.log(radius.iterate(logicInto2));
+```
+
+```js
+1)
+const HOC = () => ()=> 5
+HOC()()
+
+2)
+
+const HOC = (fn) => fn()
+fn = () => 5
+HOC(fn)
+
+
+```
+
+##### 12
+
+###### --- Map Filter Reduce
+
+funcrtion myfunction(data){
+
+  <!-- called for avery index of an array and each index we get here as data -->
+
+}
+
+- Array.map(myfunction)
+  map is always one to one mapping and will always return a new array
+  you can do anything with mapped value (mul by 2 , convert it to object anything)
+
+  ```js
+  const radius = [1, 10, 100];
+  const into2 = (data) => {
+    let rObj = {};
+    rObj[data] = data;
+    return rObj;
+  };
+  console.log(radius.map(into2));
+  ```
+
+- Array.filter(myfunction)
+  filter will always return a new array depending on condition written in myFunction
+
+  ```js
+  const radius = [1, 5, 7, 10, 100];
+  const removeLessThan10 = (data) => {
+    return data >= 10;
+  };
+  console.log(radius.filter(removeLessThan10));
+  ```
+
+- Array.reduce((acc , crr)=>{},acc_initial_Value)
+  Always remember reduce always reduces to 1 single value based on the calculation you do inside function
+
+  ```js
+  const users = [
+    { name: 'Hardik', lastName: 'ganatra', age: 25 },
+    { name: 'Virat', lastName: 'Kohli', age: 32 },
+    { name: 'Elon', lastName: 'musk', age: 45 },
+    { name: 'Forum', lastName: 'musk', age: 25 },
+    { name: 'lara', lastName: 'musk', age: 45 },
+    { name: 'Rohit', lastName: 'musk', age: 33 },
+  ];
+  console.log(
+    users.reduce((acc, crr) => {
+      if (acc[crr.age] >= 0) {
+        acc[crr.age] = acc[crr.age] + 1;
+      } else {
+        acc[crr.age] = 1;
+      }
+      return acc;
+    }, {})
+  );
+  ```
+
+##### 13
+
+###### --- What is pure function
+
+- A function which only works on the inputs and does some computation ans returns an output is known as pure Function
+- Always gives same output for same inputs
+- should not have side effects (working with external reference types , calling http request)
+
+##### 14
+
+###### --- What is Idempotent function and imperative Vs Declarative
+
+- Imperative means informing Each and Every Step to Perform (what to do and how to do)
+- Declarative means (what to do and what shpuld happen)
+  for loop is imperative whareAs Array.forEach is declarative
+  jQuery is imperative React is declarative
+
+Idempotent function => Its not pure it has side effects but produces same o/p each and every time
+
+```js
+function log() {
+  console.log('Data logged');
+}
+```
+
+##### 15
+
+###### --- What is Immutability
+
+- Immutability => Not changing the data , not changing the state but instead making copies of the state making changes to copies and
+  returning new state
+
+##### 16
+
+###### --- Call apply and Bind
+
+- Call
+  - write a function once and than reuse for multiple objects , the first argument is( object you want to pass as this )
+    and rest are the arguments for the function
+
+```js
+function printFullName(street) {
+  return `${this.firstName} ${this.lastName} ${street}`;
+}
+const Name = {
+  firstName: 'Hardik',
+  lastName: 'Ganatra',
+};
+const Other = {
+  firstName: 'ELon',
+  lastName: 'Musk',
+};
+console.log(printFullName.call(Name, 'vasai'));
+console.log(printFullName.call(Other));
+```
+
+- Apply
+
+  - Exactly same as call just you pass 2nd Argument as an array
+    consider above example
+    with
+    ```js
+    console.log(printFullName.apply(Name, ['vasai']));
+    ```
+
+- Bind
+  - Exactly same as the call method but just on eminor difference it returns a function which can be called later
+    ```js
+    console.log(printFullName.bind(Name, 'vasai')());
+    ```
+
+##### 17
+
+###### --- What is Function Currying
+
+- Book Definition is
+  currying is the technique of translating the evaluation of a function that takes multiple arguments (or a tuple of arguments) into evaluating a sequence of functions, each with a single argument (partial application).
+
+```js
+// Example no 01
+let multiply = function (x, y) {
+  return x * y;
+};
+
+let multiplyBy2 = multiply.bind(null, 2);
+// let multiplyBy2 = multiply.bind(null, 2 , 2); >>> if you do this this is not currying answer will always be 4 x = 2 , y = 2
+let multiplyBy100 = multiply.bind(null, 100);
+
+console.log(multiplyBy2(5));
+console.log(multiplyBy100(5));
+
+const multiplyClosureGeneric = function (x) {
+  return function (y) {
+    return x * y;
+  };
+};
+
+const multiplyClosureGeneric = (x) => (y) => x * y;
+
+let multiplyBy2 = multiplyClosureGeneric(2);
+console.log(multiplyBy2(5));
+let multiplyBy100 = multiplyClosureGeneric(1000);
+console.log(multiplyBy100(5));
+```
+
+```js
+// Example no 02
+const stocks = ['FN9382', 2, 3, 5];
+const wareHouses = ['SOUTH', 'SOUTH_EAST'];
+
+function prepInvoiceLine(stockID) {
+  //some check code
+  console.log(stockID);
+  if (!stocks.includes(stockID)) {
+    throw Error('Stock not present');
+  }
+
+  return (warehouseID) => {
+    //some check code
+    if (!wareHouses.includes(warehouseID)) {
+      throw Error('wareHouseId not present');
+    }
+    return (stockDeduct) => {
+      //some check code
+      return stockID + ' from ' + warehouseID + ' is reduced by ' + stockDeduct;
+    };
+  };
+}
+
+let orderItem298 = prepInvoiceLine('FN9382')('SOUTH')(2);
+
+console.log(orderItem298);
+```
