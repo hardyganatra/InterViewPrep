@@ -812,6 +812,8 @@ const div3 = (a) => a / 3;
 console.log(compose(div3, add5, mul5)(2, 5));
 ```
 
+Note - Try using reduceRIght for comose and reduce for pipe
+
 - Pipe > pipe is exactly same as compose it just executes functions left to right
 
 ```js
