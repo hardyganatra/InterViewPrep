@@ -122,30 +122,184 @@
 // console.log(multiplyBy2(5));
 // let multiplyBy100 = multiplyClosureGeneric(1000);
 // console.log(multiplyBy100(5));
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const stocks = ['FN9382', 2, 3, 5];
-const wareHouses = ['SOUTH', 'SOUTH_EAST'];
+// const stocks = ['FN9382', 2, 3, 5];
+// const wareHouses = ['SOUTH', 'SOUTH_EAST'];
 
-function prepInvoiceLine(stockID) {
-  //some check code
-  console.log(stockID);
-  if (!stocks.includes(stockID)) {
-    throw Error('Stock not present');
-  }
+// function prepInvoiceLine(stockID) {
+//   //some check code
+//   console.log(stockID);
+//   if (!stocks.includes(stockID)) {
+//     throw Error('Stock not present');
+//   }
 
-  return (warehouseID) => {
-    //some check code
-    if (!wareHouses.includes(warehouseID)) {
-      throw Error('wareHouseId not present');
+//   return (warehouseID) => {
+//     //some check code
+//     if (!wareHouses.includes(warehouseID)) {
+//       throw Error('wareHouseId not present');
+//     }
+//     return (stockDeduct) => {
+//       //some check code
+//       return stockID + ' from ' + warehouseID + ' is reduced by ' + stockDeduct;
+//     };
+//   };
+// }
+
+// let orderItem298 = prepInvoiceLine('FN9382')('SOUTH')(2);
+
+// console.log(orderItem298);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// var arr = [1, 2, 3, 4, 5];
+// arr.forEach((val, index, array) => {
+//   //   console.log({ val }, { index }, { array });
+// });
+
+// //  forEach polyfill
+
+// Array.prototype.myForEach = function (callback) {
+//   //   console.log(this);
+//   for (let i = 0; i < this.length; i++) {
+//     callback(this[i], i, this);
+//   }
+// };
+
+// arr.myForEach((val, index, array) => {
+//   // console.log({ val, index, array });
+// });
+////////////////////////////////////////////////////////////////////////////////////////////////////s
+
+// var arr = [1, 2, 3, 4, 5];
+// const mapOriginal = arr.map((crr, index, array) => {
+//   console.log({ crr: crr * 10, index, array });
+//   return crr * 10;
+// });
+// console.log(mapOriginal);
+
+// Array.prototype.myMap = function (callback) {
+//   const returnNewArray = new Array();
+//   for (let i = 0; i < this.length; i++) {
+//     const temp = callback(this[i], i, this);
+//     returnNewArray.push(temp);
+//   }
+//   return returnNewArray;
+// };
+
+// console.log(
+//   arr.myMap((crr, index, array) => {
+//     console.log({ crr, index, array });
+//     return crr * 100;
+//   })
+// );
+////////////////////////////////////////////////////////////////////////////////////////////////////s
+
+// var arr = [1, 2, 3, 4, 5, 6, 7, 100];
+
+// console.log(arr.filter((curr) => curr < 5));
+
+// Array.prototype.myFilter = function (callback) {
+//   const returnNewArray = [];
+//   for (let i = 0; i < this.length; i++) {
+//     let temp = callback(this[i], i, this);
+//     temp && returnNewArray.push(this[i]);
+//   }
+//   return returnNewArray;
+// };
+
+// console.log(arr.myFilter((curr) => curr > 5));
+
+////////////////////////////////////////////////////////////////////////////////////////////////////s
+
+// var arr = [1, 2, 3, 4, 5, 6, 7, '100', {}];
+
+// // console.log(arr.find((crr) => crr === 5));
+
+// Array.prototype.myFind = function (callback) {
+//   for (let i = 0; i < this.length; i++) {
+//     let temp = callback(this[i]);
+//     if (temp) {
+//       return this[i];
+//     }
+//   }
+//   return undefined;
+// };
+
+// console.log(arr.myFind((crr) => crr === 50));
+////////////////////////////////////////////////////////////////////////////////////////////////////s
+
+// let arr = [1, 1, 1, 1, 1, 1000, 5];
+
+// console.log(
+//   arr.reduce((acc, crr) => {
+//     acc = acc + crr;
+//     return acc;
+//   }, {})
+// );
+
+// Array.prototype.myReduce = function (callback, initaAcc) {
+//   let temp = initaAcc;
+//   for (let i = 0; i < this.length; i++) {
+//     const callBackVal = callback(temp, this[i]);
+//     temp = callBackVal;
+//   }
+//   return temp;
+// };
+
+// console.log(
+//   arr.myReduce((acc, crr) => {
+//     acc = acc + crr;
+//     return acc;
+//   }, {})
+// );
+////////////////////////////////////////////////////////////////////////////////////////////////////s
+
+// compose processes funs right to left (first mul tha add)
+
+// const compose = function (...fns) {
+//   let totalFns = fns.length;
+//   return function (...args) {
+//     let result;
+//     for (let i = totalFns - 1; i >= 0; i--) {
+//       const fn = fns[i];
+//       if (i === totalFns - 1) {
+//         result = fn(...args);
+//         result;
+//       } else {
+//         result = fn(result);
+//         result;
+//       }
+//     }
+//     return result;
+//   };
+// };
+
+// const mul5 = (a, b) => a * b;
+// const add5 = (a) => a + 5;
+// const div3 = (a) => a / 3;
+
+// console.log(compose(div3, add5, mul5)(2, 5));
+
+const compose = function (...fns) {
+  let totalFns = fns.length;
+  return function (...args) {
+    let result;
+    for (let i = 0; i < totalFns; i++) {
+      const fn = fns[i];
+      if (i === 0) {
+        result = fn(...args);
+        result;
+      } else {
+        result = fn(result);
+        result;
+      }
     }
-    return (stockDeduct) => {
-      //some check code
-      return stockID + ' from ' + warehouseID + ' is reduced by ' + stockDeduct;
-    };
+    return result;
   };
-}
+};
 
-let orderItem298 = prepInvoiceLine('FN9382')('SOUTH')(2);
+const mul5 = (a, b) => a * 2; //20
+const add5 = (a) => a + 5; //10
+const div3 = (a) => a / 3; //5
 
-console.log(orderItem298);
+console.log(compose(div3, add5, mul5)(15));

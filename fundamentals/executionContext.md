@@ -21,9 +21,9 @@
 15. [What is Immutability](#15)
 16. [call apply bind](#16)
 17. [Function currying](#17)
-
-// call apply bind
-// currying , partial application , memoization
+18. [Polyfills for forEach , map , filter , find , reduce](#18)
+19. [Compose and Pipe][#19]
+    // currying , partial application , memoization
 
 ---
 
@@ -653,4 +653,189 @@ function prepInvoiceLine(stockID) {
 let orderItem298 = prepInvoiceLine('FN9382')('SOUTH')(2);
 
 console.log(orderItem298);
+```
+
+##### 18
+
+###### --- Polyfills for forEach , map , filter , find , reduce
+
+- forEach polyfill
+
+```js
+var arr = [1, 2, 3, 4, 5];
+arr.forEach((val, index, array) => {
+  //   console.log({ val }, { index }, { array });
+});
+
+//  forEach polyfill
+
+Array.prototype.myForEach = function (callback) {
+  //   console.log(this);
+
+  for (let i = 0; i < this.length; i++) {
+    callback(this[i], i, this);
+  }
+};
+
+arr.myForEach((val, index, array) => {
+  console.log({ val, index, array });
+});
+```
+
+- map polyfill
+
+```js
+var arr = [1, 2, 3, 4, 5];
+const mapOriginal = arr.map((crr, index, array) => {
+  console.log({ crr: crr * 10, index, array });
+  return crr * 10;
+});
+console.log(mapOriginal);
+
+Array.prototype.myMap = function (callback) {
+  const returnNewArray = new Array();
+  for (let i = 0; i < this.length; i++) {
+    const temp = callback(this[i], i, this);
+    returnNewArray.push(temp);
+  }
+  return returnNewArray;
+};
+
+console.log(
+  arr.myMap((crr, index, array) => {
+    console.log({ crr, index, array });
+    return crr * 100;
+  })
+);
+```
+
+- filter polyfill
+
+```js
+var arr = [1, 2, 3, 4, 5, 6, 7, 100];
+
+console.log(arr.filter((curr) => curr < 5));
+
+Array.prototype.myFilter = function (callback) {
+  const returnNewArray = [];
+  for (let i = 0; i < this.length; i++) {
+    let temp = callback(this[i], i, this);
+    temp && returnNewArray.push(this[i]);
+  }
+  return returnNewArray;
+};
+
+console.log(arr.myFilter((curr) => curr > 5));
+```
+
+- find pilyfill
+
+```js
+var arr = [1, 2, 3, 4, 5, 6, 7, '100', {}];
+
+// console.log(arr.find((crr) => crr === 5));
+
+Array.prototype.myFind = function (callback) {
+  for (let i = 0; i < this.length; i++) {
+    let temp = callback(this[i]);
+    if (temp) {
+      return this[i];
+    }
+  }
+  return undefined;
+};
+
+console.log(arr.myFind((crr) => crr === 50));
+```
+
+- Reduce polyfill
+
+```js
+let arr = [1, 1, 1, 1, 1, 1000, 5];
+
+console.log(
+  arr.reduce((acc, crr) => {
+    acc = acc + crr;
+    return acc;
+  }, {})
+);
+
+Array.prototype.myReduce = function (callback, initaAcc) {
+  let temp = initaAcc;
+  for (let i = 0; i < this.length; i++) {
+    const callBackVal = callback(temp, this[i]);
+    temp = callBackVal;
+  }
+  return temp;
+};
+
+console.log(
+  arr.myReduce((acc, crr) => {
+    acc = acc + crr;
+    return acc;
+  }, {})
+);
+```
+
+##### 19
+
+###### --- Compose and Pipe
+
+- Compose > is function which takes in multiple function and executes from right to left sending each function the o/p of previous one
+  - basically a conveyer belt of functions where result of one is input to other
+
+```js
+compose processes funs right to left (first mul tha add)
+
+const compose = function (...fns) {
+  let totalFns = fns.length;
+  return function (...args) {
+    let result;
+    for (let i = totalFns - 1; i >= 0; i--) {
+      const fn = fns[i];
+      if (i === totalFns - 1) {
+        result = fn(...args);
+        result;
+      } else {
+        result = fn(result);
+        result;
+      }
+    }
+    return result;
+  };
+};
+
+const mul5 = (a, b) => a * b;
+const add5 = (a) => a + 5;
+const div3 = (a) => a / 3;
+
+console.log(compose(div3, add5, mul5)(2, 5));
+```
+
+- Pipe > pipe is exactly same as compose it just executes functions left to right
+
+```js
+const pipe = function (...fns) {
+  let totalFns = fns.length;
+  return function (...args) {
+    let result;
+    for (let i = 0; i < totalFns; i++) {
+      const fn = fns[i];
+      if (i === 0) {
+        result = fn(...args);
+        result;
+      } else {
+        result = fn(result);
+        result;
+      }
+    }
+    return result;
+  };
+};
+
+const mul5 = (a, b) => a * 2; //20
+const add5 = (a) => a + 5; //10
+const div3 = (a) => a / 3; //5
+
+console.log(pipe(div3, add5, mul5)(15));
 ```
