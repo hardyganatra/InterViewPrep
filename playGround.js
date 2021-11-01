@@ -280,26 +280,44 @@
 
 // console.log(compose(div3, add5, mul5)(2, 5));
 
-const compose = function (...fns) {
-  let totalFns = fns.length;
-  return function (...args) {
-    let result;
-    for (let i = 0; i < totalFns; i++) {
-      const fn = fns[i];
-      if (i === 0) {
-        result = fn(...args);
-        result;
-      } else {
-        result = fn(result);
-        result;
-      }
-    }
-    return result;
-  };
+// const pipe = function (...fns) {
+//   let totalFns = fns.length;
+//   return function (...args) {
+//     let result;
+//     for (let i = 0; i < totalFns; i++) {
+//       const fn = fns[i];
+//       if (i === 0) {
+//         result = fn(...args);
+//         result;
+//       } else {
+//         result = fn(result);
+//         result;
+//       }
+//     }
+//     return result;
+//   };
+// };
+
+// const mul5 = (a, b) => a * 2; //20
+// const add5 = (a) => a + 5; //10
+// const div3 = (a) => a / 3; //5
+
+// console.log(pipe(div3, add5, mul5)(15));
+
+const pipeWithReduce = (...fns) => {
+  return (args) => fns.reduce((acc, crr) => (acc = crr(acc)), args);
 };
 
 const mul5 = (a, b) => a * 2; //20
 const add5 = (a) => a + 5; //10
 const div3 = (a) => a / 3; //5
+console.log(pipeWithReduce(div3, add5, mul5)(15));
 
-console.log(compose(div3, add5, mul5)(15));
+// const ComposeWithReduceRight = (...fns) => {
+//   return (args) => fns.reduceRight((acc, crr) => (acc = crr(acc)), args);
+// };
+
+// const mul5 = (a, b) => a * 2; //20  // 30
+// const add5 = (a) => a + 6; //10     // 36
+// const div3 = (a) => a / 3; //5      // 12
+// console.log(ComposeWithReduceRight(div3, add5, mul5)(15));

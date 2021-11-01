@@ -841,3 +841,68 @@ const div3 = (a) => a / 3; //5
 
 console.log(pipe(div3, add5, mul5)(15));
 ```
+
+````js
+const pipeWithReduce = (...fns) => {
+  return (args) => {
+    return fns.reduce((acc, crr, index) => {
+      acc, crr, index;
+      if (index === 0) {
+        acc = args;
+      }
+      acc = crr(acc);
+      acc;
+      return acc;
+    }, 0);
+  };
+};
+
+const mul5 = (a, b) => a * 2; //20
+const add5 = (a) => a + 5; //10
+const div3 = (a) => a / 3; //5
+console.log(pipeWithReduce(div3, add5, mul5)(15));
+
+const ComposeWithReduceRight = (...fns) => {
+  const len = fns.length;
+  return (args) => {
+    return fns.reduceRight((acc, crr, index) => {
+      acc, crr, index;
+      if (index === len - 1) {
+        acc = args;
+      }
+      acc = crr(acc);
+      acc;
+      return acc;
+    }, 0);
+  };
+};
+
+const mul5 = (a, b) => a * 2; //20  // 30
+const add5 = (a) => a + 6; //10     // 36
+const div3 = (a) => a / 3; //5      // 12
+console.log(ComposeWithReduceRight(div3, add5, mul5)(15));
+
+// MORE SIMPLIFIED
+
+// Arraw used and acc initial value as args
+
+const pipeWithReduce = (...fns) => {
+  return (args) => fns.reduce((acc, crr) => (acc = crr(acc)), args);
+};
+
+const mul5 = (a, b) => a * 2; //20
+const add5 = (a) => a + 5; //10
+const div3 = (a) => a / 3; //5
+console.log(pipeWithReduce(div3, add5, mul5)(15));
+
+const ComposeWithReduceRight = (...fns) => {
+  return (args) => fns.reduceRight((acc, crr) => (acc = crr(acc)), args);
+};
+
+const mul5 = (a, b) => a * 2; //20  // 30
+const add5 = (a) => a + 6; //10     // 36
+const div3 = (a) => a / 3; //5      // 12
+console.log(ComposeWithReduceRight(div3, add5, mul5)(15));
+```
+
+````
