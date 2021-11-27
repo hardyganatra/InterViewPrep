@@ -23,7 +23,12 @@
 17. [Function currying](#17)
 18. [Polyfills for forEach , map , filter , find , reduce](#18)
 19. [Compose and Pipe][#19]
+20. [Prototype][#20]
+21. [Debounce][#21]
+22. [Throttle][#22]
     // currying , partial application , memoization
+    // Prototype
+    //polyfill of bind
 
 ---
 
@@ -32,7 +37,9 @@
 ##### What is Execution Context
 
 - Every thing in JavaScript happens Inside Execution Context, Execution Context has 2 components memory component(variable
+
   Enviornment) and code component(Thread of Execution)
+
 - As soon as javaScript Code starts running lot of things happen inside JavaSript Engine
   1. Global Execution Context is created (having memory and code component)
   2. Execution context is created in 2 phases
@@ -375,9 +382,11 @@ var b = () => {};
 ```js
 function attachEventListeners() {
   let i = 0;
-  document.getElementById('btn').addEventListener('click', function clickFunc() {
-    console.log('btn click', ++i);
-  });
+  document
+    .getElementById("btn")
+    .addEventListener("click", function clickFunc() {
+      console.log("btn click", ++i);
+    });
 }
 
 attachEventListeners();
@@ -502,12 +511,12 @@ funcrtion myfunction(data){
 
   ```js
   const users = [
-    { name: 'Hardik', lastName: 'ganatra', age: 25 },
-    { name: 'Virat', lastName: 'Kohli', age: 32 },
-    { name: 'Elon', lastName: 'musk', age: 45 },
-    { name: 'Forum', lastName: 'musk', age: 25 },
-    { name: 'lara', lastName: 'musk', age: 45 },
-    { name: 'Rohit', lastName: 'musk', age: 33 },
+    { name: "Hardik", lastName: "ganatra", age: 25 },
+    { name: "Virat", lastName: "Kohli", age: 32 },
+    { name: "Elon", lastName: "musk", age: 45 },
+    { name: "Forum", lastName: "musk", age: 25 },
+    { name: "lara", lastName: "musk", age: 45 },
+    { name: "Rohit", lastName: "musk", age: 33 },
   ];
   console.log(
     users.reduce((acc, crr) => {
@@ -542,7 +551,7 @@ Idempotent function => Its not pure it has side effects but produces same o/p ea
 
 ```js
 function log() {
-  console.log('Data logged');
+  console.log("Data logged");
 }
 ```
 
@@ -566,14 +575,14 @@ function printFullName(street) {
   return `${this.firstName} ${this.lastName} ${street}`;
 }
 const Name = {
-  firstName: 'Hardik',
-  lastName: 'Ganatra',
+  firstName: "Hardik",
+  lastName: "Ganatra",
 };
 const Other = {
-  firstName: 'ELon',
-  lastName: 'Musk',
+  firstName: "ELon",
+  lastName: "Musk",
 };
-console.log(printFullName.call(Name, 'vasai'));
+console.log(printFullName.call(Name, "vasai"));
 console.log(printFullName.call(Other));
 ```
 
@@ -583,13 +592,13 @@ console.log(printFullName.call(Other));
     consider above example
     with
     ```js
-    console.log(printFullName.apply(Name, ['vasai']));
+    console.log(printFullName.apply(Name, ["vasai"]));
     ```
 
 - Bind
   - Exactly same as the call method but just on eminor difference it returns a function which can be called later
     ```js
-    console.log(printFullName.bind(Name, 'vasai')());
+    console.log(printFullName.bind(Name, "vasai")());
     ```
 
 ##### 17
@@ -628,29 +637,29 @@ console.log(multiplyBy100(5));
 
 ```js
 // Example no 02
-const stocks = ['FN9382', 2, 3, 5];
-const wareHouses = ['SOUTH', 'SOUTH_EAST'];
+const stocks = ["FN9382", 2, 3, 5];
+const wareHouses = ["SOUTH", "SOUTH_EAST"];
 
 function prepInvoiceLine(stockID) {
   //some check code
   console.log(stockID);
   if (!stocks.includes(stockID)) {
-    throw Error('Stock not present');
+    throw Error("Stock not present");
   }
 
   return (warehouseID) => {
     //some check code
     if (!wareHouses.includes(warehouseID)) {
-      throw Error('wareHouseId not present');
+      throw Error("wareHouseId not present");
     }
     return (stockDeduct) => {
       //some check code
-      return stockID + ' from ' + warehouseID + ' is reduced by ' + stockDeduct;
+      return stockID + " from " + warehouseID + " is reduced by " + stockDeduct;
     };
   };
 }
 
-let orderItem298 = prepInvoiceLine('FN9382')('SOUTH')(2);
+let orderItem298 = prepInvoiceLine("FN9382")("SOUTH")(2);
 
 console.log(orderItem298);
 ```
@@ -731,7 +740,7 @@ console.log(arr.myFilter((curr) => curr > 5));
 - find pilyfill
 
 ```js
-var arr = [1, 2, 3, 4, 5, 6, 7, '100', {}];
+var arr = [1, 2, 3, 4, 5, 6, 7, "100", {}];
 
 // console.log(arr.find((crr) => crr === 5));
 
@@ -906,3 +915,98 @@ console.log(ComposeWithReduceRight(div3, add5, mul5)(15));
 ```
 
 ````
+
+##### 20
+
+###### --- Prototype
+
+- When ever we create let say an object or lets say an array js
+  attaches an object to that which can be accessed by objName.**proto**
+
+lets say
+
+```js
+const arr = [1234];
+now arr.__proto__ = some object which has fucntions like map and forEach
+and also Array.prototype = same like above object
+
+now since above is alse sn object it also has __proto__ attached to it
+
+now arr.__proto__.__proto__ = some object which has properties exactly equal to
+
+Object.prototype
+
+which proves arrays are objects
+
+now arr.__proto__.__proto__.__proto__ is null
+
+const obj1 = {
+  speed : "200000"
+}
+const obj2 = {
+  name : "Hardik"
+}
+obj2.__proto__ = obj1
+
+console.log(obj2.speed) // 20000
+
+```
+
+##### 21
+
+###### --- Debounce
+
+Used to limit the rate at which the function is invoked
+let say we click something we attach a timer which will make the function run only after let say 300 i-e 0.3 ms , if you try to again ivnoke the function it will clear the earlier timer and start a new timer so in that way we are not calling he heavy functin again and again
+
+Debouncing is a practice which is used to improve browser performance.
+A programming practice which ensure that time-consuming tasks do not fire so often.
+It is used to limits the rate at which a function gets invoked.
+
+```js
+const display = () => console.log("fn called");
+
+const bounced = function (fn, delay) {
+  let timer;
+  return function () {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, arguments);
+    }, delay);
+  };
+};
+
+const obtimisedDisplay = bounced(display, 1000);
+for (let index = 0; index < 5; index++) {
+  obtimisedDisplay();
+  display();
+}
+```
+
+##### 22
+
+###### --- Throttle
+
+Throttle means sakti , how many times you call a function it will only be called once in a given time frame
+
+```js
+const display = () => console.log("HI there");
+const throttle = (fn, delay) => {
+  let timerIsOn;
+  return function () {
+    if (!timerIsOn) {
+      timerIsOn = true;
+      setTimeout(() => {
+        timerIsOn = false;
+        fn.apply(this, arguments);
+      }, delay);
+    }
+  };
+};
+
+const optimesedDisplay = throttle(display, 2000);
+for (let index = 0; index < 5; index++) {
+  display();
+  optimesedDisplay();
+}
+```
