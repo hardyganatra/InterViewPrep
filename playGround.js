@@ -16,6 +16,8 @@
 //   }
 // );
 
+//test
+
 let myProm = new Promise((resolve, reject) => {
   let flag = false;
   flag ? resolve("success") : reject("fail");
