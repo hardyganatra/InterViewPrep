@@ -26,6 +26,7 @@
 20. [Prototype](#20)
 21. [Debounce](#21)
 22. [Throttle](#22)
+23. [Promises](#22)
 
     // currying , partial application , memoization
     // Prototype
@@ -1010,4 +1011,22 @@ for (let index = 0; index < 5; index++) {
   display();
   optimesedDisplay();
 }
+```
+
+##### 23
+
+###### --- Promises
+
+- Used to handle Asynchronous operation in JS
+
+```js
+let myProm = new Promise((resolve, reject) => {
+  let flag = true;
+  flag ? resolve("success") : reject("fail");
+});
+
+myProm.then(
+  (data) => console.log(data),
+  (data) => console.log(data)
+);
 ```

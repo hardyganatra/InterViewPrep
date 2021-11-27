@@ -1,19 +1,27 @@
-const display = () => console.log("HI there");
-const throttle = (fn, delay) => {
-  let timerIsOn;
-  return function () {
-    if (!timerIsOn) {
-      timerIsOn = true;
-      setTimeout(() => {
-        timerIsOn = false;
-        fn.apply(this, arguments);
-      }, delay);
-    }
-  };
-};
+// let myProm = new Promise((resolve, reject) => {
+//   let flag = false;
+//   if (flag) {
+//     resolve("pass");
+//   } else {
+//     reject("fail");
+//   }
+// });
 
-const optimesedDisplay = throttle(display, 2000);
-for (let index = 0; index < 5; index++) {
-  display();
-  optimesedDisplay();
-}
+// myProm.then(
+//   function (result) {
+//     console.log(result);
+//   },
+//   function (error) {
+//     console.log(error);
+//   }
+// );
+
+let myProm = new Promise((resolve, reject) => {
+  let flag = false;
+  flag ? resolve("success") : reject("fail");
+});
+
+myProm.then(
+  (data) => console.log(data),
+  (data) => console.log(data)
+);
