@@ -22,10 +22,11 @@
 16. [call apply bind](#16)
 17. [Function currying](#17)
 18. [Polyfills for forEach , map , filter , find , reduce](#18)
-19. [Compose and Pipe][#19]
-20. [Prototype][#20]
-21. [Debounce][#21]
-22. [Throttle][#22]
+19. [Compose and Pipe](#19)
+20. [Prototype](#20)
+21. [Debounce](#21)
+22. [Throttle](#22)
+
     // currying , partial application , memoization
     // Prototype
     //polyfill of bind
