@@ -26,7 +26,10 @@
 20. [Prototype](#20)
 21. [Debounce](#21)
 22. [Throttle](#22)
-23. [Promises](#22)
+23. [Promises basics](#22)
+24. [CallBack Hell > Promises > async await](#23)
+25. [Execution of three async call one after another](#24)
+26. [Promise API](#25)
 
     // currying , partial application , memoization
     // Prototype
@@ -1030,3 +1033,183 @@ myProm.then(
   (data) => console.log(data)
 );
 ```
+
+##### 24
+
+###### --- CallBack Hell
+
+- let say we have an icecream parlour where first the order is placed and later the production is started and icecream is propared.
+  now each step takes some amount of time to complete
+
+using Callbacks
+
+```js
+let stocks = {
+  Fruits: ["strawberry", "grapes", "banana", "apple"],
+  liquid: ["water", "ice"],
+  holder: ["cone", "cup", "stick"],
+  toppings: ["chocolate", "peanuts"],
+};
+let order = (fruitName, call_production) => {
+  setTimeout(() => {
+    console.log(`${stocks.Fruits[0]} is selected fruit`);
+    call_production();
+  }, 2000);
+};
+let production = () => {
+  console.log("production started");
+  setTimeout(() => {
+    console.log("water and ice added");
+    setTimeout(() => {
+      console.log("machine started");
+      setTimeout(() => {
+        console.log("container selected");
+      }, 2000);
+    }, 1000);
+  }, 1000);
+};
+order(0, production);
+```
+
+- Promises has three states , pendng resolve rejected
+
+```js
+let is_shop_open = true;
+
+let order = (time, work) => {
+  return new Promise((resolve, reject) => {
+    if (is_shop_open) {
+      setTimeout(() => {
+        resolve(work());
+      }, time);
+    } else reject("Sorry Sir !! Our Shop is closed");
+  });
+};
+
+order(2000, () => console.log("Strabberry selected"))
+  .then(() => {
+    console.log("production started");
+  })
+  .then(() => {
+    return order(2000, () => console.log("cut the fruit"));
+  })
+  .then(() => {
+    return order(2000, () => console.log("add water and ice"));
+  })
+  .then(() => {
+    return order(1000, () => console.log("Select Container"));
+  })
+  .then(() => {
+    return order(3000, () => console.log("IceCream prepared and served"));
+  })
+  //catch runs only if promise is rejected
+  .catch(() => console.log("NO ICECREAM Customer Go gone"))
+  // no matter is promise is fullfilled or rejected finnally runs
+  .finally(() => {
+    console.log("shutter down");
+  });
+```
+
+- so promise blue print is
+
+```js
+let order = () => {
+  return new Promise((resolve, rejected) => {
+    if (true) {
+      resolve();
+    } else {
+      rejected();
+    }
+  });
+};
+
+order()
+.then()
+.then()
+.then()
+.then()
+.catch()
+.finally(
+```
+
+- Using async await
+
+```js
+let order = async () => {
+  try {
+    await abc;
+  } catch (error) {
+    console.log("abc not exists", error);
+  } finally {
+    console.log("I always run");
+  }
+};
+
+order().then(() => console.log("do what ever"));
+```
+
+```js
+const getData = async () => {
+  let response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  let data = await response.json();
+  console.log(data);
+  console.log("prints only after res");
+};
+getData();
+console.log("JS waits for none");
+
+const withPromises = () => {
+  return fetch("https://jsonplaceholder.typicode.co/posts");
+};
+console.log(
+  withPromises()
+    .then((d) => d.json())
+    .then((d) => console.log(d))
+    .catch((error) => {
+      console.log("this is an error", error);
+    })
+);
+```
+
+##### 25
+
+###### --- Execution of three async call one after another
+
+```js
+const p1 = async () => {
+  setTimeout(() => {
+    console.log("first executed");
+    console.log("second started");
+  }, 1000);
+};
+
+const p2 = async () => {
+  setTimeout(() => {
+    console.log("second executed");
+    console.log("third started");
+  }, 3000);
+};
+
+const p3 = async () => {
+  setTimeout(() => {
+    console.log("third executed");
+  }, 6000);
+};
+
+p1().then(() => p2().then(() => p3()));
+```
+
+##### 25
+
+###### --- Promise Api
+
+- There are 6 static methods of Promise class:
+
+Promise.all(promises) – waits for all promises to resolve and returns an array of their results. If any of the given promises rejects, it becomes the error of Promise.all, and all other results are ignored.
+Promise.allSettled(promises) (recently added method) – waits for all promises to settle and returns their results as an array of objects with:
+status: "fulfilled" or "rejected"
+value (if fulfilled) or reason (if rejected).
+Promise.race(promises) – waits for the first promise to settle, and its result/error becomes the outcome.
+Promise.any(promises) (recently added method) – waits for the first promise to fulfill, and its result becomes the outcome. If all of the given promises are rejected, AggregateError becomes the error of Promise.any.
+Promise.resolve(value) – makes a resolved promise with the given value.
+Promise.reject(error) – makes a rejected promise with the given error.
