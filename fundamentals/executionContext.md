@@ -1249,22 +1249,26 @@ p1().then(() => p2().then(() => p3()));
 
   - This inside function which is a part of object
 
-        ```js
-        const myObj = {
+    ```js
+    console.log(myObj.printName()); // returns Hardik
+    ```
+
+    - called with object name
+
+      ```js
+      const myObj = {
         name: "Hardik",
         // here this is inside a function and the below function
         // can be called in multiple ways like directly calling with reference
         // to myObj.printName() or it can be assigned to a variable and later
         // invoked
         printName() {
-        return this.name;
-
+          return this.name;
         },
-        };
+      };
+      ```
 
-        ```
-
-    - called with object name
+      - called with object name
 
       ```js
       console.log(myObj.printName()); // returns Hardik
