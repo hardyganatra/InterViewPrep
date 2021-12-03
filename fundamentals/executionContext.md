@@ -26,10 +26,11 @@
 20. [Prototype](#20)
 21. [Debounce](#21)
 22. [Throttle](#22)
-23. [Promises basics](#22)
-24. [CallBack Hell > Promises > async await](#23)
-25. [Execution of three async call one after another](#24)
-26. [Promise API](#25)
+23. [Promises basics](#23)
+24. [CallBack Hell > Promises > async await](#24)
+25. [Execution of three async call one after another](#25)
+26. [Promise API](#26)
+27. [RollerCodester This](#27)
 
     // currying , partial application , memoization
     // Prototype
@@ -1213,3 +1214,193 @@ p1().then(() => p2().then(() => p3()));
 - Promise.any([promises]) (recently added method) – waits for the first promise to fulfill, and its result becomes the outcome. If all of the given promises are rejected, AggregateError becomes the error of Promise.any.
 - Promise.resolve(value) – makes a resolved promise with the given value.
 - Promise.reject(error) – makes a rejected promise with the given error.
+
+##### 27
+
+###### --- RollerCodester This
+
+- The value of this is dependent upon where the this is located and
+  how it is called
+
+  - This in open (without functions)
+
+  ```js
+  console.log(this); //  value as window
+  ```
+
+  - This inside our old type if functions (not arrow)
+
+  ```js
+  function normalFunc(params) {
+    return this;
+  }
+  console.log(normalFunc()); // value as window
+  ```
+
+  - This inside constructor function (called with new keyword)
+
+    ```js
+    function constFunc(params) {
+      return this;
+    }
+    const ob1 = new constFunc();
+    console.log(ob1); // points to the newly created objects and its properties
+    ```
+
+  - This inside function which is a part of object
+
+        ```js
+        const myObj = {
+        name: "Hardik",
+        // here this is inside a function and the below function
+        // can be called in multiple ways like directly calling with reference
+        // to myObj.printName() or it can be assigned to a variable and later
+        // invoked
+        printName() {
+        return this.name;
+
+        },
+        };
+
+        ```
+
+    - called with object name
+
+      ```js
+      console.log(myObj.printName()); // returns Hardik
+      ```
+
+    - Assigned to a variable and invoked later
+
+      ```js
+      let invokeLater = myObj.printName;
+      console.log(invokeLater(), "invoke later"); // Does not return hardik (this points to window)
+      ```
+
+    - called with some reference using call keyword
+
+    ```js
+    console.log(invokeLater.call(myObj)); // returns Hardik
+    ```
+
+    ### ARROW FUNCTIONS
+
+    Its said that arrow functions do not have their own this and
+    arrow functions this points to the the the lexical enviornments this
+
+    lets rock and roll with examples
+
+    ```js
+    const myArr = () => {
+      return this;
+    };
+
+    console.log(myArr()); // returns window
+    /*from above just in your mind remove  () => {
+      return this;
+    };
+    and check what will be this outside that window right
+     */
+    ```
+
+    - Consider below example , Tings will be much more clear
+
+    ```js
+    const myArr = () => {
+      return this;
+    };
+
+    const oldFunc = function () {
+      return this;
+    };
+
+    const myObjCheck = {
+      arow: myArr,
+      old: oldFunc,
+    };
+    console.log(myObjCheck.arow()); // returns window
+    /* Reason being simple as above remove () => {
+      return this;
+    }; and check what will be this outside , it will be window correct  
+    so we say arrow functions do not have their own this and the this points to lexical enviornments this 
+    
+    Now see below noemal functions work on logic we discussed previously
+    */
+
+    console.log(myObjCheck.old()); // returns {arow: ƒ, old: ƒ}
+    ```
+
+    - There is no affect of call , apply , bind in arrow functions as their this cannnot be changed
+
+    - check below
+
+      ```js
+      console.log(myArr.call(myObjCheck)); // returns window
+
+      // but for normal functions
+      console.log(oldFunc.call(myObjCheck)); // returns {arow: ƒ, old: ƒ}
+      ```
+
+      - Behavior or arrow functions inside objects
+
+        ```js
+        const ipl = {
+          iplThis: this,
+          teams: ["KKR", "CSK", "MI"],
+          printTeams: function () {
+            return this.teams;
+          },
+          printTeamsWithArroe: function () {
+            return () => {
+              return this.teams;
+            };
+          },
+        };
+
+        // just keep this below thing in mind
+        console.log(ipl.iplThis); //  window
+
+        // now with normal functions
+
+        console.log(ipl.printTeams()); // ['KKR', 'CSK', 'MI']
+
+        // now with arrow functions
+
+        console.log(ipl.printTeamsWithArroe()()); //['KKR', 'CSK', 'MI']
+        ```
+
+        lets just tweek printTeamsWithArroe a bit and convert that to arrow
+
+        ```js
+        const ipl = {
+          iplThis: this,
+          teams: ["KKR", "CSK", "MI"],
+          printTeams: function () {
+            return this.teams;
+          },
+          printTeamsWithArroe: () => {
+            return () => {
+              return this.teams;
+            };
+          },
+        };
+
+        // we print the same thing we printed above
+
+        console.log(ipl.printTeamsWithArroe()()); // this rerurns undefined
+
+        /* Reason is simple
+        
+        in your mind ignore 
+        
+        () => {
+            return () => {
+              return this.teams;
+            };
+          },
+        
+        and check the value of this out side we have already seen its 
+        window , hence we get undefined
+        
+          */
+        ```
