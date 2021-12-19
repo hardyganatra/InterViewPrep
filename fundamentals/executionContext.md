@@ -31,6 +31,7 @@
 25. [Execution of three async call one after another](#25)
 26. [Promise API](#26)
 27. [RollerCodester This](#27)
+28. [Async and deffer](#28)
 
     // currying , partial application , memoization
     // Prototype
@@ -1408,3 +1409,29 @@ p1().then(() => p2().then(() => p3()));
         
           */
         ```
+
+##### 03
+
+##### Async and deffer
+
+![image info](assets/LinkedList.png)
+
+- Async and deffer are boolean attributes which are used along with script tags to load the external scripts
+  efficiently
+- When we load a webpage here are majot things happening
+  1 ) HTML parsing
+  2 ) Loading of the scripts - Loading the scripts from n/w - Executing scripts line by line
+
+- Normal script tag without any attribute
+  HTML parsing begins , when we encounter a script tag HTML parsing stops script is loaded and then executed and after this we again start parsing HTML (Here javascript blocks rendering of HTML)
+- ASYNC -> script tag with async attribute
+  HTML parsing begins , when we encounter a script tag The scripts are fetched acynsronously HTML parsing continuous while loading and once script is fetched it then executes and during execution HTML parsing is stopped ( though the blocking time is half as per compared above ) and once script is executed fully HTML parsing begins again
+
+  Use case => analytics script
+  DO not use => multiple scripts dependent on each other (since scripts load async )
+
+- DEFER -> script tag with async attribute
+  HTML parsing begins , when we encounter a script tag The scripts are fetched parallely HTML parsing continuous while loading scripts and even parsing is continued once the script is loaded (here we do not halt HTML parsing)
+  once HTML parsing finishes only then we execute out scripts
+
+  Use case => multiple scripts dependent on each other

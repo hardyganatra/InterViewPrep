@@ -1,29 +1,13 @@
-// let myProm = new Promise((resolve, reject) => {
-//   let flag = false;
-//   if (flag) {
-//     resolve("pass");
-//   } else {
-//     reject("fail");
-//   }
-// });
+const bubbleSort = (array) => {
+  let arr = array;
+  for (let i = arr.length - 1; i > 0; i--) {
+    for (let j = 0; j <= i - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      }
+    }
+  }
+  return arr;
+};
 
-// myProm.then(
-//   function (result) {
-//     console.log(result);
-//   },
-//   function (error) {
-//     console.log(error);
-//   }
-// );
-
-//test
-
-let myProm = new Promise((resolve, reject) => {
-  let flag = false;
-  flag ? resolve("success") : reject("fail");
-});
-
-myProm.then(
-  (data) => console.log(data),
-  (data) => console.log(data)
-);
+console.log(bubbleSort([1, 3, 5, 20, 9, 7]));
